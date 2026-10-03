@@ -52,32 +52,7 @@
       margin: 0;
       text-align: left;
       white-space: pre;       /* keep line breaks and spaces as written */
-      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
-      font-size: 8pt;
-      line-height: 1.7;
-      color: #000000;
-    }
-
-    .info[hidden] {
-      display: none;
-    }
-
-    /* top text, typed letter by letter */
-    .welcome {
-      position: fixed;
-      top: clamp(1rem, 3vh, 2rem);
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-      text-align: left;
-      margin: 0;
-      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
-      font-size: min(10pt, 2.8vw);   /* shrinks on narrow screens so it fits */
-      line-height: 1.4;
-      color: #000000;
-    }
-  </style>
-</head>
+      font-
 <body>
 
   <p class="welcome" id="welcome">🅆🄴🄻🄲🄾🄼🄴 ​ 🅃🄾 ​ 🅃🄷🄴 ​ 🅆🄾🅁🄻🄳 ​ 🅄🄵🄾🄿🄾🄽🅈</p>
@@ -89,7 +64,6 @@
 ⁺ • ˚. *࿐ ᵗᵃᵏᵉ ⁱᵗ ˢˡᵒʷ⁺ • ˚. *࿐ ⁺
 📧 ᵐʸᵖᵒⁿʸᵃⁿᵈ@ᵍᵐᵃⁱˡ·ᶜᵒᵐ </p>
   </div>
-
   <script>
     const nameBtn = document.getElementById('name');
     const info = document.getElementById('info');
@@ -98,3 +72,26 @@
       const open = info.hidden;
       info.hidden = !open;
       nameBtn.setAttribute('aria-expanded', String(open));
+    });
+
+    // top text: appears letter by letter from the left
+    (function () {
+      const el = document.getElementById('welcome');
+      const chars = Array.from(el.textContent.trim());   // split by whole characters so symbols are not cut in half
+      const SPEED = 100;   // ms per letter (smaller = faster)
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      el.style.width = el.getBoundingClientRect().width + 'px';   // lock width so typing starts from the left edge
+      el.textContent = '';
+      let i = 0;
+      const timer = setInterval(() => {
+        i++;
+        el.textContent = chars.slice(0, i).join('');
+        if (i >= chars.length) clearInterval(timer);
+      }, SPEED);
+    })();
+  </script>
+
+</body>
+</html>
