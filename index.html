@@ -35,4 +35,66 @@
       all: unset;
       display: block;
       cursor: pointer;
-      font-family: system-ui, "Seg
+      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
+      font-size: 9pt;
+      color: var(--link);
+      font-weight: 500;
+    }
+
+    .name:focus-visible {
+      outline: 1px dotted var(--link);
+      outline-offset: 4px;
+    }
+
+    /* opens on the left of the name when clicked */
+    .info {
+      order: -1;
+      margin: 0;
+      text-align: left;
+      white-space: pre;       /* keep line breaks and spaces as written */
+      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
+      font-size: 8pt;
+      line-height: 1.7;
+      color: #000000;
+    }
+
+    .info[hidden] {
+      display: none;
+    }
+
+    /* top text, typed letter by letter */
+    .welcome {
+      position: fixed;
+      top: clamp(1rem, 3vh, 2rem);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      text-align: left;
+      margin: 0;
+      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
+      font-size: min(10pt, 2.8vw);   /* shrinks on narrow screens so it fits */
+      line-height: 1.4;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="welcome" id="welcome">🅆🄴🄻🄲🄾🄼🄴 ​ 🅃🄾 ​ 🅃🄷🄴 ​ 🅆🄾🅁🄻🄳 ​ 🅄🄵🄾🄿🄾🄽🅈</p>
+
+  <div class="group">
+    <button class="name" id="name" aria-expanded="false" aria-controls="info" aria-label="h.am.sun.ism">h꙳a꙳m꙳s꙳u꙳n꙳i꙳s꙳m</button>
+    <p class="info" id="info" hidden>| ʳᵃʷ ⠃ ˢᵒᶠᵗ  ⠃ ᵈᵉᶠⁱᵃⁿᵗ 
+| ᵍʳᵃᵖʰⁱᶜ ᵈᵉˢⁱᵍⁿ 𓅸  ᴬᴵ ᵛⁱˢᵘᵃˡ ꙳ ♡゚゚゚̥̥̊ 
+⁺ • ˚. *࿐ ᵗᵃᵏᵉ ⁱᵗ ˢˡᵒʷ⁺ • ˚. *࿐ ⁺
+📧 ᵐʸᵖᵒⁿʸᵃⁿᵈ@ᵍᵐᵃⁱˡ·ᶜᵒᵐ </p>
+  </div>
+
+  <script>
+    const nameBtn = document.getElementById('name');
+    const info = document.getElementById('info');
+
+    nameBtn.addEventListener('click', () => {
+      const open = info.hidden;
+      info.hidden = !open;
+      nameBtn.setAttribute('aria-expanded', String(open));
