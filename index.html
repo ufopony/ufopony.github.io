@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ufopony</title>
   <style>
     :root {
-      --bg: #ffffff;      /* 배경색 */
-      --ink: #000000;     /* 모든 글자색 (검정) */
-      --link: #000000;    /* 이름 글자색 (검정) */
+      --bg: #ffffff;      /* background */
+      --ink: #000000;     /* text color */
+      --link: #000000;    /* name color */
     }
 
     html, body {
@@ -16,10 +16,10 @@
       margin: 0;
       background: var(--bg);
       color: var(--ink);
-      font-family: "Nanum Myeongjo", "Noto Serif KR", "Times New Roman", "Batang", serif;
+      font-family: system-ui, sans-serif;
     }
 
-    /* 왼쪽 끝 중단: 이름 위, 문구 아래 */
+    /* left edge, vertically centered */
     .group {
       position: fixed;
       top: 50%;
@@ -27,7 +27,7 @@
       transform: translateY(-50%);
       text-align: left;
       display: flex;
-      align-items: center;    /* 이름과 설명이 같은 높이(세로 가운데)로 정렬 */
+      align-items: center;    /* name and info share the same vertical center */
       gap: 1rem;
     }
 
@@ -35,88 +35,4 @@
       all: unset;
       display: block;
       cursor: pointer;
-      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
-      font-size: 9pt;
-      color: var(--link);
-      font-weight: 500;
-    }
-
-    .name:focus-visible {
-      outline: 1px dotted var(--link);
-      outline-offset: 4px;
-    }
-
-    /* 이름을 누르면 왼쪽 끝에 열리는 문구 (이름은 그 오른쪽으로 밀려남) */
-    .info {
-      order: -1;              /* 이름보다 왼쪽(왼쪽 끝)에 위치 */
-      margin: 0;
-      text-align: left;
-      white-space: pre;       /* 줄바꿈과 띄어쓰기를 그대로 유지 */
-      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
-      font-size: 8pt;
-      line-height: 1.7;
-      color: #000000;
-    }
-
-    .info[hidden] {
-      display: none;
-    }
-    /* 맨 상단 문구 (한 글자씩 나타남) */
-    .welcome {
-      position: fixed;
-      top: clamp(1rem, 3vh, 2rem);
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-      text-align: left;
-      margin: 0;
-      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
-      font-size: 10pt;
-      line-height: 1.4;
-      color: #000000;
-    }
-  </style>
-</head>
-<body>
-
-  <p class="welcome" id="welcome">🅆🄴🄻🄲🄾🄼🄴 ​ 🅃🄾 ​ 🅃🄷🄴 ​ 🅆🄾🅁🄻🄳 ​ 🅄🄵🄾🄿🄾🄽🅈</p>
-
-  <div class="group">
-    <button class="name" id="name" aria-expanded="false" aria-controls="info" aria-label="h.am.sun.ism">h꙳a꙳m꙳s꙳u꙳n꙳i꙳s꙳m</button>
-    <p class="info" id="info" hidden>| ʳᵃʷ ⠃ ˢᵒᶠᵗ  ⠃ ᵈᵉᶠⁱᵃⁿᵗ 
-| ᵍʳᵃᵖʰⁱᶜ ᵈᵉˢⁱᵍⁿ 𓅸  ᴬᴵ ᵛⁱˢᵘᵃˡ ꙳ ♡゚゚゚̥̥̊ 
-⁺ • ˚. *࿐ ᵗᵃᵏᵉ ⁱᵗ ˢˡᵒʷ⁺ • ˚. *࿐ ⁺
-📧 ᵐʸᵖᵒⁿʸᵃⁿᵈ@ᵍᵐᵃⁱˡ·ᶜᵒᵐ </p>
-  </div>
-
-  <script>
-    const name = document.getElementById('name');
-    const info = document.getElementById('info');
-
-    name.addEventListener('click', () => {
-      const open = info.hidden;
-      info.hidden = !open;
-      name.setAttribute('aria-expanded', String(open));
-    });
-
-    /* 상단 문구: 왼쪽부터 한 글자씩 나타남 */
-    (function () {
-      const el = document.getElementById('welcome');
-      const chars = Array.from(el.textContent.trim());   // 특수문자가 반쪽으로 잘리지 않게 글자 단위로 나눔
-      const SPEED = 100;   // 글자 하나가 나타나는 간격 (ms), 작을수록 빠름
-
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      el.style.width = el.getBoundingClientRect().width + 'px';   // 완성된 문구 너비로 고정 (왼쪽부터 생기게)
-      el.textContent = '';
-      let i = 0;
-      const timer = setInterval(() => {
-        i++;
-        el.textContent = chars.slice(0, i).join('');
-        if (i >= chars.length) clearInterval(timer);
-      }, SPEED);
-    })();
-  </script>
-
-</body>
-</html>
+      font-family: system-ui, "Seg
