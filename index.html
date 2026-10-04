@@ -32,28 +32,147 @@
       line-height: 1.4;
       color: #000000;
     }
+
+    /* stardust block: glyphs appear one by one, like sprinkled stardust */
+    .dust {
+      --shift: 4em;           /* how far the name + paragraph are pushed to the right */
+      position: fixed;
+      top: 41%;               /* 50% = exact middle; smaller = higher */
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: max-content;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", "Noto Music", "Noto Sans Javanese", sans-serif;
+      font-size: min(calc(60vh / 25.5), calc(92vw / 25));   /* fallback; the script below fits it exactly */
+      line-height: 1.7;
+      color: #000000;
+    }
+
+    .dust pre {
+      margin: 0;
+      font: inherit;
+      text-align: left;
+      white-space: pre;       /* keep spaces and line breaks exactly as written */
+    }
+
+    .dust .stars { align-self: center; transform: translateX(1.5em); }   /* stars + click!: centered under the top text, then nudged right */
+    .dust .click { margin-top: 0.9em; }                                  /* gap between the stars and the click! line */
+    .dust .bottom { align-self: flex-start; }           /* 123° and UFOPONY, close to the left */
+    .dust .mid { margin-left: var(--shift); }            /* name + paragraph, pushed to the right */
+    .dust .bottom { margin-top: 0.8em; }                 /* gap above 123° and UFOPONY (smaller = higher) */
+
+    .dust a {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* set by the script: glyphs start invisible, then twinkle in one by one */
+    .dust.ready span { opacity: 0; }
+    .dust.ready span.on { animation: twinkle 0.9s ease-out forwards; }
+
+    @keyframes twinkle {
+      0%   { opacity: 0; text-shadow: 0 0 0 #ffffff; }
+      35%  { opacity: 1; text-shadow: 0 0 8px #ffffff, 0 0 14px #ffffff; }
+      100% { opacity: 1; text-shadow: none; }
+    }
   </style>
 </head>
 <body>
 
   <p class="welcome" id="welcome">🅆🄴🄻🄲🄾🄼🄴 ​ 🅃🄾 ​ 🅃🄷🄴 ​ 🄽🄴🅆 ​ 🅂🄿🄰🄲🄴 ​ 🅄🄵🄾🄿🄾🄽🅈</p>
 
+  <div class="dust" id="dust">
+<div class="stars">
+<pre class="top">꙳   𓏬     ⭒ 
+﹡    𝄪
+    ▫︎     ✰
+𓏬      ∗       ꙳      <a href="miss.html">⛾</a>
+⭒          ⛨     𓏬
+       ✯⃰         ⛓︎     ꙳⭒        </pre>
+<pre class="click">  𝄢             𝄪                         ᶜˡⁱᶜᵏꜝ⬎</pre>
+</div>
+<pre class="mid">                       〖ʜ꙳ᴀ꙳ᴍ꙳ꜱ꙳ᴜ꙳ɴ꙳ɪ꙳ꜱ꙳ᴍ〗
+                               | ʳᵃʷ ⠃ ˢᵒᶠᵗ ⠃ ᵈᵉᶠⁱᵃⁿᵗ 
+                   | ᵍʳᵃᵖʰⁱᶜ ᵈᵉˢⁱᵍⁿ 𓅸 ᴬᴵ ᵛⁱˢᵘᵃˡ
+    ⁺ • ˚. *࿐ ᵗᵃᵏᵉ ⁱᵗ ˢˡᵒʷ⁺ • ˚. *࿐ ⁺
+                        ✏︎ ᵐʸᵖᵒⁿʸᵃⁿᵈ@ᵍᵐᵃⁱˡ·ᶜᵒᵐ</pre>
+<pre class="bottom">   ¹²³°
+꧁ 🅤🅕🅞🅟🅞🅝🅨 ꧂ </pre>
+  </div>
+
   <script>
-    // top text: appears letter by letter from the left
     (function () {
       const el = document.getElementById('welcome');
       const chars = Array.from(el.textContent.trim());   // split by whole characters so symbols are not cut in half
-      const SPEED = 100;   // ms per letter (smaller = faster)
+      const SPEED = 100;       // ms per letter of the top text (smaller = faster)
+      const DELAY = 2000;      // ms to wait after the top text finishes
+      const DUST_MIN = 25;     // fastest gap between two glyphs of the stardust (ms)
+      const DUST_MAX = 65;     // slowest gap between two glyphs of the stardust (ms)
 
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      // ---- size the stardust block to fill about 60% of the screen height (never wider than 92% of the width)
+      const FILL = 0.6;       // 0.6 = 60% of the screen height
+      const MAX_W = 0.92;     // upper limit as a share of the screen width
+      const dust = document.getElementById('dust');
+      function fit() {
+        dust.style.fontSize = '100px';   // measure at a known size, then scale
+        const r = dust.getBoundingClientRect();
+        const size = Math.min(window.innerHeight * FILL / r.height, window.innerWidth * MAX_W / r.width) * 100;
+        dust.style.fontSize = size + 'px';
+      }
+      fit();
+      window.addEventListener('resize', fit);
+      window.addEventListener('load', fit);
 
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // motion off: everything just shows
+
+      // ---- wrap every visible glyph of the stardust block in its own span
+      const seg = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+      const split = (t) => seg ? Array.from(seg.segment(t), (x) => x.segment) : Array.from(t);
+
+      const glyphs = [];
+      const walker = document.createTreeWalker(dust, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        const frag = document.createDocumentFragment();
+        split(node.nodeValue).forEach((g) => {
+          if (/^\s+$/.test(g)) {
+            frag.appendChild(document.createTextNode(g));   // spaces and line breaks stay as they are
+          } else {
+            const span = document.createElement('span');
+            span.textContent = g;
+            frag.appendChild(span);
+            glyphs.push(span);
+          }
+        });
+        node.parentNode.replaceChild(frag, node);
+      });
+      dust.classList.add('ready');   // glyphs are invisible from here on
+
+      function sprinkle() {
+        let n = 0;
+        (function next() {
+          if (n >= glyphs.length) return;
+          glyphs[n++].classList.add('on');
+          setTimeout(next, DUST_MIN + Math.random() * (DUST_MAX - DUST_MIN));
+        })();
+      }
+
+      // ---- top text: appears letter by letter from the left
       el.style.width = el.getBoundingClientRect().width + 'px';   // lock width so typing starts from the left edge
       el.textContent = '';
       let i = 0;
       const timer = setInterval(() => {
         i++;
         el.textContent = chars.slice(0, i).join('');
-        if (i >= chars.length) clearInterval(timer);
+        if (i >= chars.length) {
+          clearInterval(timer);
+          setTimeout(sprinkle, DELAY);   // stardust starts after the top text is done
+        }
       }, SPEED);
     })();
   </script>
