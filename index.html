@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg: #fdf2ba;      /* background */
-      --ink: #f77492;     /* text color */
+      --ink: #000000;     /* text color */
     }
 
     html, body {
@@ -30,7 +30,7 @@
       font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", sans-serif;
       font-size: min(10pt, 2.5vw);   /* shrinks on narrow screens so it fits */
       line-height: 1.4;
-      color: #f77492;
+      color: #000000;
     }
 
     /* stardust block: glyphs appear one by one, like sprinkled stardust */
@@ -48,7 +48,7 @@
       font-family: system-ui, "Segoe UI Symbol", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Egyptian Hieroglyphs", "Noto Music", "Noto Sans Javanese", sans-serif;
       font-size: min(calc(60vh / 25.5), calc(92vw / 25));   /* fallback; the script below fits it exactly */
       line-height: 1.7;
-      color: #f77492;
+      color: #000000;
     }
 
     .dust pre {
@@ -75,8 +75,8 @@
     .dust.ready span.on { animation: twinkle 0.9s ease-out forwards; }
 
     @keyframes twinkle {
-      0%   { opacity: 0; text-shadow: 0 0 0 #f77492; }
-      35%  { opacity: 1; text-shadow: 0 0 8px #ffffff, 0 0 14px #f77492; }
+      0%   { opacity: 0; text-shadow: 0 0 0 #000000; }
+      35%  { opacity: 1; text-shadow: 0 0 8px #000000, 0 0 14px #000000; }
       100% { opacity: 1; text-shadow: none; }
     }
   </style>
